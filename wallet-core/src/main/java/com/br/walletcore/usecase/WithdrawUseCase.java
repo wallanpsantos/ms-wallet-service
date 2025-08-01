@@ -53,7 +53,7 @@ public class WithdrawUseCase {
                 "currency", amount.getCurrency(),
                 "previousBalance", previousBalance.getAmount(),
                 "newBalance", updatedWallet.getBalance().getAmount(),
-                "timestamp", transaction.getTimestamp(),
+                "timestamp", transaction.getTimestamp().toString(),
                 "transactionId", transaction.getId()
         ));
 

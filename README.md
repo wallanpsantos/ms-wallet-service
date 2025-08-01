@@ -58,7 +58,7 @@ wallet-service/
 - ✅ **Resiliência:** Replicação e persistência de mensagens
 - ✅ **Integração:** Facilita integração com outros serviços
 
-**Observação:** O projeto suporta tanto Apache Kafka quanto Redpanda (docker-compose.dev.yml) para desenvolvimento.
+**Observação:** O projeto suporta tanto Apache Kafka quanto Redpanda para desenvolvimento.
 
 ### Outbox Pattern
 
@@ -414,7 +414,7 @@ KAFKA_PORT=9092
 3. **Inicie as dependências:**
 ```bash
 # Para desenvolvimento com Redpanda (mais leve)
-docker-compose -f docker-compose.dev.yml up -d
+docker-compose -f docker-compose.yml up -d
 
 # Ou com Kafka tradicional (se disponível)
 docker-compose up -d
@@ -423,8 +423,8 @@ docker-compose up -d
 4. **Aguarde inicialização completa:**
 ```bash
 # Verificar saúde dos serviços
-docker-compose -f docker-compose.dev.yml ps
-docker-compose -f docker-compose.dev.yml logs -f
+docker-compose -f docker-compose.yml ps
+docker-compose -f docker-compose.yml logs -f
 ```
 
 ### Compilação e Execução
@@ -678,7 +678,7 @@ docker exec -it wallet-mongodb-dev mongosh wallet_db \
 docker exec -it wallet-redpanda-dev rpk topic consume wallet-events --num 5
 
 # Verificar se scheduler está processando
-docker-compose -f docker-compose.dev.yml logs wallet-service | grep "Processing outbox"
+docker-compose -f docker-compose.yml logs wallet-service | grep "Processing outbox"
 ```
 
 ---
@@ -798,7 +798,7 @@ db.outbox_events.createIndex({"aggregateId": 1});
 **Aplicação não inicia:**
 ```bash
 # Verificar se dependências estão rodando
-docker-compose -f docker-compose.dev.yml ps
+docker-compose -f docker-compose.yml ps
 
 # Verificar logs da aplicação
 ./mvnw spring-boot:run -pl wallet-config | grep ERROR
@@ -820,7 +820,7 @@ docker exec -it wallet-mongodb-dev mongosh wallet_db \
   --eval "db.outbox_events.find({processed: false}).count()"
 
 # Verificar logs do scheduler
-docker-compose -f docker-compose.dev.yml logs | grep "OutboxEventProcessor"
+docker-compose -f docker-compose.yml logs | grep "OutboxEventProcessor"
 ```
 
 **Consumer não processa mensagens:**
@@ -832,7 +832,7 @@ docker exec -it wallet-redpanda-dev rpk group list
 docker exec -it wallet-redpanda-dev rpk group describe wallet-audit-consumer
 
 # Verificar logs do consumer
-docker-compose -f docker-compose.dev.yml logs | grep "WalletEventConsumer"
+docker-compose -f docker-compose.yml logs | grep "WalletEventConsumer"
 ```
 
 **Erro de transação MongoDB:**

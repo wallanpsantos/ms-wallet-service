@@ -80,7 +80,8 @@ public class OutboxEventProcessor {
                 "aggregateId", event.getAggregateId(),
                 "payload", eventData,
                 "createdAt", event.getCreatedAt().toString(),
-                "correlationId", event.getCorrelationId()
+                "correlationId", event.getCorrelationId(),
+                "timestamp", event.getCreatedAt().toString()
         );
 
         kafkaTemplate.send(walletEventsTopicName, event.getAggregateId(), kafkaEvent).get();

@@ -90,7 +90,7 @@ public class TransferUseCase {
                 Map.entry("sourceBalanceAfter", updatedSourceWallet.getBalance().getAmount()),
                 Map.entry("targetBalanceBefore", targetBalance.getAmount()),
                 Map.entry("targetBalanceAfter", updatedTargetWallet.getBalance().getAmount()),
-                Map.entry("timestamp", depositTransaction.getTimestamp())
+                Map.entry("timestamp", depositTransaction.getTimestamp().toString())
         ));
 
         log.info("Transfer completed successfully from {} to {}", fromUserId, toUserId);

@@ -3,6 +3,7 @@ package com.br.walletdataprovider.kafka;
 import com.br.walletcore.port.events.EventPublisher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 
@@ -12,6 +13,7 @@ import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
+@Qualifier("kafkaEventPublisher")
 public class KafkaEventPublisher implements EventPublisher {
 
     @Value("${wallet.kafka.topics.wallet-events.name}")
@@ -25,7 +27,7 @@ public class KafkaEventPublisher implements EventPublisher {
             Map<String, Object> event = Map.of(
                     "eventType", eventType,
                     "payload", payload,
-                    "timestamp", LocalDateTime.now(),
+                    "timestamp", LocalDateTime.now().toString(),
                     "eventId", UUID.randomUUID().toString()
             );
 

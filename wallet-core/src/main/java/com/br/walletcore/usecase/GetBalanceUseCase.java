@@ -63,24 +63,6 @@ public class GetBalanceUseCase {
         }
     }
 
-    private void validatePeriodInputs(String userId, LocalDate startDate, LocalDate endDate) {
-        if (userId == null || userId.trim().isEmpty()) {
-            throw new IllegalArgumentException("UserId cannot be null or empty");
-        }
-        if (startDate == null) {
-            throw new IllegalArgumentException("Start date cannot be null");
-        }
-        if (endDate == null) {
-            throw new IllegalArgumentException("End date cannot be null");
-        }
-        if (startDate.isAfter(endDate)) {
-            throw new IllegalArgumentException("Start date cannot be after end date");
-        }
-        if (endDate.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("End date cannot be in the future");
-        }
-    }
-
     private Money createZeroBalance(Wallet wallet) {
         if (wallet.getBalance() != null) {
             return Money.of(BigDecimal.ZERO, wallet.getBalance().getCurrency());

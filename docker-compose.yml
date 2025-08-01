@@ -1,4 +1,4 @@
-# docker-compose.dev.yml (versão com Redpanda)
+# docker-compose.yml (versão com Redpanda)
 services:
   mongodb:
     image: mongo:8.0.9
@@ -87,7 +87,7 @@ services:
 
 volumes:
   mongo-data-dev:
-  redpanda-data-dev: # Volume para os dados do Redpanda
+  redpanda-data-dev:
 
 networks:
   wallet-network-dev:
