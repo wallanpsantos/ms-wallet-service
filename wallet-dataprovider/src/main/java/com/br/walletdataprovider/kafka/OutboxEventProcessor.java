@@ -31,8 +31,8 @@ public class OutboxEventProcessor {
     @Value("${wallet.outbox.max-retries}")
     private int maxRetries;
 
-    @Value("${wallet.kafka.topics.wallet-events.name}")
-    private String walletEventsTopicName;
+    @Value("${wallet.kafka.topics.wallet-outbox.name}")
+    private String walletOutboxTopicName;
 
     @Value("${wallet.audit.enabled}")
     private boolean auditEnabled;
@@ -64,7 +64,6 @@ public class OutboxEventProcessor {
                 publishEventToKafka(event);
                 markAsProcessed(event);
                 log.debug("Successfully processed outbox event: {}", event.getId());
-
             } catch (Exception e) {
                 handleProcessingError(event, e);
             }
@@ -84,7 +83,8 @@ public class OutboxEventProcessor {
                 "timestamp", event.getCreatedAt().toString()
         );
 
-        kafkaTemplate.send(walletEventsTopicName, event.getAggregateId(), kafkaEvent).get();
+        kafkaTemplate.send(walletOutboxTopicName, event.getAggregateId(), kafkaEvent).get();
+        log.info("Event sent to wallet-outbox topic: {}", event.getId());
     }
 
 
