@@ -1,0 +1,128 @@
+server:
+  port: 8080
+  shutdown: graceful
+
+spring:
+  application:
+    name: ms-wallet-service
+
+  # ==================== MONGODB CONFIG ====================
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/wallet_db
+      auto-index-creation: true
+
+  # ==================== KAFKA CONFIG ====================
+  kafka:
+    bootstrap-servers: localhost:9092
+
+    # Configurações do Producer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all # Garante que todas as réplicas confirmem
+      retries: 3
+      enable-idempotence: true # Evita duplicatas
+      batch-size: 16384
+      linger-ms: 5
+      compression-type: snappy
+      properties:
+        delivery.timeout.ms: 120000
+        buffer.memory: 33554432
+        max.request.size: 1048576
+
+    # Configurações do Consumer
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      group-id: wallet-service-group
+      auto-offset-reset: earliest
+      enable-auto-commit: false # Acknowledgment manual
+      max-poll-records: 10
+      fetch-min-size: 1024
+      fetch-max-wait: 500
+      properties:
+        spring.json.trusted.packages: "com.br.walletcore.domain,com.br.walletdataprovider.kafka.event,java.util,java.lang"
+        spring.json.type.mapping: "walletEvent:com.br.walletdataprovider.kafka.event.WalletEvent"
+
+    # Configurações dos Tópicos
+    admin:
+      properties:
+        bootstrap.servers: localhost:9092
+
+    # Configurações do Listener
+    listener:
+      ack-mode: manual_immediate
+      concurrency: 3
+      poll-timeout: 3000
+
+# ==================== LOGGING CONFIG ====================
+logging:
+  level:
+    com.br: DEBUG
+    org.springframework.kafka: INFO
+    org.apache.kafka: WARN
+    org.springframework.data.mongodb: INFO
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level [%X{correlationId}] %logger{36} - %msg%n"
+
+# ==================== MANAGEMENT/ACTUATOR ====================
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+  health:
+    mongo:
+      enabled: true
+    kafka:
+      enabled: true
+
+# ==================== WALLET SPECIFIC CONFIG ====================
+wallet:
+  # Configurações de Negócio
+  business:
+    max-transaction-amount: 1000000.00
+    supported-currencies: BRL,USD,EUR
+    transaction-timeout: 30s
+    min-transaction-amount: 0.01
+
+  # Configurações do Outbox Pattern
+  outbox:
+    scheduler:
+      enabled: true
+      fixed-delay: 5000 # 5 segundos
+      initial-delay: 10000 # 10 segundos para dar tempo do Kafka subir
+    batch-size: 100
+    max-retries: 3
+
+  # Configurações dos Tópicos Kafka
+  kafka:
+    topics:
+      wallet-events:
+        name: wallet-events
+        partitions: 3
+        replicas: 1
+      wallet-outbox:
+        name: wallet-outbox
+        partitions: 3
+        replicas: 1
+    consumer:
+      concurrency: 3
+      max-poll-records: 10
+
+  # Configurações de Auditoria
+  audit:
+    enabled: true
+    kafka-topic: ${wallet.kafka.topics.wallet-events.name}
+
+  # Configurações de Cache (se necessário)
+  cache:
+    enabled: false
+    ttl: 300s
+    max-size: 1000

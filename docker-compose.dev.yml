@@ -1,0 +1,94 @@
+# docker-compose.dev.yml (versão com Redpanda)
+services:
+  mongodb:
+    image: mongo:8.0.9
+    container_name: wallet-mongodb-dev
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS}
+      MONGO_INITDB_DATABASE: ${MONGO_DB}
+    volumes:
+      - mongo-data-dev:/data/db
+      - ./docker/mongodb/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    networks:
+      - wallet-network-dev
+    healthcheck:
+      test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # Zookeeper e Kafka foram substituídos pelo Redpanda
+  redpanda:
+    image: docker.redpanda.com/redpandadata/redpanda:latest
+    container_name: wallet-redpanda-dev
+    restart: unless-stopped
+    command: # Comando para iniciar o Redpanda em modo de desenvolvimento
+      - redpanda
+      - start
+      - --mode
+      - dev-container
+      - --kafka-addr
+      - PLAINTEXT://0.0.0.0:29092,OUTSIDE://0.0.0.0:9092
+      - --advertise-kafka-addr
+      - PLAINTEXT://redpanda:29092,OUTSIDE://localhost:9092
+    volumes:
+      - redpanda-data-dev:/var/lib/redpanda/data
+    networks:
+      - wallet-network-dev
+    ports:
+      - "${KAFKA_PORT:-9092}:9092"         # Porta da API do Kafka
+      - "${REDPANDA_ADMIN_PORT:-9644}:9644" # Porta da API de Admin do Redpanda
+    healthcheck:
+      test: [ "CMD-SHELL", "rpk cluster health | grep -E 'Healthy:.+true' || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  redpanda-console:
+    image: docker.redpanda.com/redpandadata/console:latest
+    container_name: wallet-redpanda-console-dev
+    restart: unless-stopped
+    env_file: .env
+    depends_on:
+      redpanda:
+        condition: service_healthy # Agora depende do Redpanda
+    ports:
+      - "${REDPANDA_CONSOLE_PORT:-8090}:8080"
+    environment:
+      KAFKA_BROKERS: redpanda:29092 # E se conecta ao Redpanda
+    networks:
+      - wallet-network-dev
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: wallet-mongo-express-dev
+    restart: always
+    env_file: .env
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    ports:
+      - "${MONGO_EXPRESS_PORT:-8081}:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_USER}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASS}
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_USER}:${MONGO_PASS}@mongodb:27017/
+      ME_CONFIG_BASICAUTH_USERNAME: ${ME_USER}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${ME_PASS}
+    networks:
+      - wallet-network-dev
+
+volumes:
+  mongo-data-dev:
+  redpanda-data-dev: # Volume para os dados do Redpanda
+
+networks:
+  wallet-network-dev:
+    driver: bridge
