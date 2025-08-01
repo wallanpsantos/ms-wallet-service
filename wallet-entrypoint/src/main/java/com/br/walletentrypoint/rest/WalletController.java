@@ -69,9 +69,8 @@ public class WalletController {
     }
 
     @PostMapping("/{userId}/deposit")
-    public ResponseEntity<TransactionResponse> deposit(
-            @PathVariable String userId,
-            @Valid @RequestBody DepositRequest request) {
+    public ResponseEntity<TransactionResponse> deposit(@PathVariable String userId,
+                                                       @Valid @RequestBody DepositRequest request) {
 
         log.info("Processing deposit for user: {}", userId);
 
@@ -83,9 +82,8 @@ public class WalletController {
     }
 
     @PostMapping("/{userId}/withdraw")
-    public ResponseEntity<TransactionResponse> withdraw(
-            @PathVariable String userId,
-            @Valid @RequestBody WithdrawRequest request) {
+    public ResponseEntity<TransactionResponse> withdraw(@PathVariable String userId,
+                                                        @Valid @RequestBody WithdrawRequest request) {
 
         log.info("Processing withdrawal for user: {}", userId);
 
@@ -120,7 +118,7 @@ public class WalletController {
 
         return ResponseEntity.ok(response);
     }
-    
+
     @GetMapping("/{userId}/balance/historical")
     public ResponseEntity<List<BalanceResponse>> getHistoricalBalance(
             @PathVariable String userId,

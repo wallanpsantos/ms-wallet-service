@@ -1,0 +1,721 @@
+{
+	"info": {
+		"_postman_id": "2c23a0eb-a97e-49fa-b43c-1f378837ca4e",
+		"name": "[ms-wallet-service]",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7142154"
+	},
+	"item": [
+		{
+			"name": "1. Criar carteira",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userId\": \"688c2e05c0514a144d4bd13c\",\r\n    \"currency\": \"BRL\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/wallets",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"wallets"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Exemplo - Cliente A",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"688c2e05c0514a144d4bd13c\",\r\n    \"currency\": \"BRL\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/wallets",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"wallets"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 01 Aug 2025 03:23:57 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"688c334d57bd95d223b9af9c\",\n    \"userId\": \"688c2e05c0514a144d4bd13c\",\n    \"balance\": 0,\n    \"currency\": \"BRL\",\n    \"createdAt\": \"2025-08-01T00:23:57.6203075\"\n}"
+				}
+			]
+		},
+		{
+			"name": "2. Depositar fundos",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"amount\": 200.50,\r\n    \"currency\": \"BRL\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/wallets/688c2e05c0514a144d4bd13c/deposit",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"wallets",
+						"688c2e05c0514a144d4bd13c",
+						"deposit"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Exemplo - Deposito Cliente A",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"amount\": 200.50,\r\n    \"currency\": \"BRL\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/wallets/688c2e05c0514a144d4bd13c/deposit",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"wallets",
+								"688c2e05c0514a144d4bd13c",
+								"deposit"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 01 Aug 2025 03:24:33 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"c942674d-06af-4d71-aa98-3a63ef9faaa1\",\n    \"walletId\": \"688c334d57bd95d223b9af9c\",\n    \"type\": \"DEPOSIT\",\n    \"amount\": 200.5,\n    \"currency\": \"BRL\",\n    \"balanceAfter\": 200.5,\n    \"timestamp\": \"2025-08-01T00:24:33.3230074\",\n    \"correlationId\": \"deea4840-6aae-4d2a-a530-1a0476260954\"\n}"
+				}
+			]
+		},
+		{
+			"name": "3. Consultar saldo atual",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/wallets/688c2e05c0514a144d4bd13c/balance",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"wallets",
+						"688c2e05c0514a144d4bd13c",
+						"balance"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Exemplo - Consulta saldo Cliente A",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/wallets/688c2e05c0514a144d4bd13c/balance",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"wallets",
+								"688c2e05c0514a144d4bd13c",
+								"balance"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 01 Aug 2025 03:24:52 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"userId\": \"688c2e05c0514a144d4bd13c\",\n    \"balance\": 200.5,\n    \"currency\": \"BRL\",\n    \"timestamp\": \"2025-08-01T00:24:52.2017933\"\n}"
+				}
+			]
+		},
+		{
+			"name": "4. Criar segunda carteira",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userId\": \"000022e05c0514a144d400002\",\r\n    \"currency\": \"BRL\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/wallets",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"wallets"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Exemplo - Cliente B",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"000022e05c0514a144d400002\",\r\n    \"currency\": \"BRL\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/wallets",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"wallets"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 01 Aug 2025 03:25:08 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"688c339457bd95d223b9af9d\",\n    \"userId\": \"000022e05c0514a144d400002\",\n    \"balance\": 0,\n    \"currency\": \"BRL\",\n    \"createdAt\": \"2025-08-01T00:25:08.1199087\"\n}"
+				}
+			]
+		},
+		{
+			"name": "5. Transferir fundos",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"fromUserId\": \"688c2e05c0514a144d4bd13c\", \r\n    \"toUserId\": \"000022e05c0514a144d400002\",\r\n    \"amount\": 50.00,\r\n    \"currency\": \"BRL\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/wallets/transfer",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"wallets",
+						"transfer"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Exemplo - Transferência Cliente A para Cliente B",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fromUserId\": \"688c2e05c0514a144d4bd13c\", \r\n    \"toUserId\": \"000022e05c0514a144d400002\",\r\n    \"amount\": 50.00,\r\n    \"currency\": \"BRL\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/wallets/transfer",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"wallets",
+								"transfer"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 01 Aug 2025 03:25:30 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": \"a75ed55b-904e-46e2-883f-b0e313741c61\",\n        \"walletId\": \"688c334d57bd95d223b9af9c\",\n        \"type\": \"TRANSFER_OUT\",\n        \"amount\": 50,\n        \"currency\": \"BRL\",\n        \"balanceAfter\": 150.5,\n        \"timestamp\": \"2025-08-01T00:25:30.9426638\",\n        \"correlationId\": \"c422b3ab-2204-4a61-a688-2c668917e160\"\n    },\n    {\n        \"id\": \"b2e1655a-6afd-47b8-9a89-601b05d1334e\",\n        \"walletId\": \"688c339457bd95d223b9af9d\",\n        \"type\": \"TRANSFER_IN\",\n        \"amount\": 50,\n        \"currency\": \"BRL\",\n        \"balanceAfter\": 50,\n        \"timestamp\": \"2025-08-01T00:25:30.9461698\",\n        \"correlationId\": \"c422b3ab-2204-4a61-a688-2c668917e160\"\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "6. Consultar saldo histórico",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/wallets/688c2e05c0514a144d4bd13c/balance/historical?date=2025-08-01",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"wallets",
+						"688c2e05c0514a144d4bd13c",
+						"balance",
+						"historical"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2025-08-01"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Exemplo - Consulta Cliente B",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/wallets/000022e05c0514a144d400002/balance/historical?date=2025-08-01",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"wallets",
+								"000022e05c0514a144d400002",
+								"balance",
+								"historical"
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "2025-08-01"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 01 Aug 2025 03:26:19 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"userId\": \"000022e05c0514a144d400002\",\n        \"balance\": 50,\n        \"currency\": \"BRL\",\n        \"timestamp\": \"2025-08-01T00:26:19.558911\"\n    }\n]"
+				},
+				{
+					"name": "Exemplo - Consulta Cliente A",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/wallets/688c2e05c0514a144d4bd13c/balance/historical?date=2025-08-01",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"wallets",
+								"688c2e05c0514a144d4bd13c",
+								"balance",
+								"historical"
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "2025-08-01"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 01 Aug 2025 03:26:46 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"userId\": \"688c2e05c0514a144d4bd13c\",\n        \"balance\": 150.5,\n        \"currency\": \"BRL\",\n        \"timestamp\": \"2025-08-01T00:26:46.2724831\"\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "7. Sacar fundos",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"amount\": 25.50,\r\n    \"currency\": \"BRL\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/wallets/688c2e05c0514a144d4bd13c/withdraw",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"wallets",
+						"688c2e05c0514a144d4bd13c",
+						"withdraw"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Exemplo - Saque Cliente A",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"amount\": 25.50,\r\n    \"currency\": \"BRL\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/wallets/688c2e05c0514a144d4bd13c/withdraw",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"wallets",
+								"688c2e05c0514a144d4bd13c",
+								"withdraw"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 01 Aug 2025 03:27:12 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"563535f9-4831-4617-838f-d7494a873823\",\n    \"walletId\": \"688c334d57bd95d223b9af9c\",\n    \"type\": \"WITHDRAW\",\n    \"amount\": 25.5,\n    \"currency\": \"BRL\",\n    \"balanceAfter\": 125,\n    \"timestamp\": \"2025-08-01T00:27:12.0935748\",\n    \"correlationId\": \"627de901-ed58-47d6-b48f-ac505b8df8ab\"\n}"
+				}
+			]
+		}
+	]
+}
