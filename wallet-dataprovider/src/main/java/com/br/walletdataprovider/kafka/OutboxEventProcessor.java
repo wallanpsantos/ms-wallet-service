@@ -79,12 +79,13 @@ public class OutboxEventProcessor {
                 "eventType", event.getEventType(),
                 "aggregateId", event.getAggregateId(),
                 "payload", eventData,
-                "createdAt", event.getCreatedAt(),
+                "createdAt", event.getCreatedAt().toString(),
                 "correlationId", event.getCorrelationId()
         );
 
         kafkaTemplate.send(walletEventsTopicName, event.getAggregateId(), kafkaEvent).get();
     }
+
 
     private void markAsProcessed(OutboxEventDocument event) {
         event.setProcessed(true);

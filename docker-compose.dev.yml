@@ -25,7 +25,7 @@ services:
 
   # Zookeeper e Kafka foram substituídos pelo Redpanda
   redpanda:
-    image: docker.redpanda.com/redpandadata/redpanda:latest
+    image: redpandadata/redpanda:latest
     container_name: wallet-redpanda-dev
     restart: unless-stopped
     command: # Comando para iniciar o Redpanda em modo de desenvolvimento

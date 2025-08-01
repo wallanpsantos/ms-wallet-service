@@ -1,25 +1,28 @@
 server:
-  port: 8080
+  port: ${SERVER_PORT:8080}
   shutdown: graceful
 
 spring:
   application:
     name: ms-wallet-service
 
+  # ==================== PROFILE CONFIGURATION ====================
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
   docker:
     compose:
-      enabled: false
+      enabled: ${DOCKER_COMPOSE_ENABLED:false}
 
   # ==================== MONGODB CONFIG ====================
   data:
     mongodb:
-      # Use a URI do seu arquivo .env para autenticação local
       uri: ${MONGO_URL:mongodb://admin:admin123@localhost:27017/wallet_db?authSource=admin}
       auto-index-creation: false
 
   # ==================== KAFKA CONFIG ====================
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
 
     # Configurações do Producer
     producer:
@@ -28,105 +31,221 @@ spring:
       acks: all # Garante que todas as réplicas confirmem
       retries: 3
       enable-idempotence: true # Evita duplicatas
-      batch-size: 16384
-      linger-ms: 5
-      compression-type: snappy
+      batch-size: ${KAFKA_PRODUCER_BATCH_SIZE:16384}
+      linger-ms: ${KAFKA_PRODUCER_LINGER_MS:5}
+      compression-type: ${KAFKA_PRODUCER_COMPRESSION:snappy}
       properties:
-        delivery.timeout.ms: 120000
-        buffer.memory: 33554432
-        max.request.size: 1048576
+        delivery.timeout.ms: ${KAFKA_PRODUCER_DELIVERY_TIMEOUT:120000}
+        buffer.memory: ${KAFKA_PRODUCER_BUFFER_MEMORY:33554432}
+        max.request.size: ${KAFKA_PRODUCER_MAX_REQUEST_SIZE:1048576}
+        # Configurações específicas para ambientes containerizados
+        connections.max.idle.ms: ${KAFKA_CONNECTIONS_MAX_IDLE:540000}
+        reconnect.backoff.ms: ${KAFKA_RECONNECT_BACKOFF:50}
+        reconnect.backoff.max.ms: ${KAFKA_RECONNECT_BACKOFF_MAX:1000}
 
     # Configurações do Consumer
     consumer:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      group-id: wallet-service-group
-      auto-offset-reset: earliest
+      group-id: ${KAFKA_CONSUMER_GROUP_ID:wallet-service-group}
+      auto-offset-reset: ${KAFKA_CONSUMER_AUTO_OFFSET_RESET:earliest}
       enable-auto-commit: false # Acknowledgment manual
-      max-poll-records: 10
-      fetch-min-size: 1024
-      fetch-max-wait: 500
+      max-poll-records: ${KAFKA_CONSUMER_MAX_POLL_RECORDS:10}
+      fetch-min-size: ${KAFKA_CONSUMER_FETCH_MIN_SIZE:1024}
+      fetch-max-wait: ${KAFKA_CONSUMER_FETCH_MAX_WAIT:500}
       properties:
         spring.json.trusted.packages: "*"
+        # Configurações específicas para Docker/Kubernetes
+        session.timeout.ms: ${KAFKA_CONSUMER_SESSION_TIMEOUT:30000}
+        heartbeat.interval.ms: ${KAFKA_CONSUMER_HEARTBEAT_INTERVAL:10000}
+        max.poll.interval.ms: ${KAFKA_CONSUMER_MAX_POLL_INTERVAL:300000}
 
     # Configurações dos Tópicos
     admin:
       properties:
-        bootstrap.servers: localhost:9092
+        bootstrap.servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
 
     # Configurações do Listener
     listener:
       ack-mode: manual_immediate
-      concurrency: 3
-      poll-timeout: 3000
+      concurrency: ${KAFKA_LISTENER_CONCURRENCY:3}
+      poll-timeout: ${KAFKA_LISTENER_POLL_TIMEOUT:3000}
 
 # ==================== LOGGING CONFIG ====================
 logging:
   level:
-    com.br: DEBUG
-    org.springframework.kafka: INFO
-    org.apache.kafka: WARN
-    org.springframework.data.mongodb: INFO
+    com.br: ${LOGGING_LEVEL_COM_BR:DEBUG}
+    org.springframework.kafka: ${LOGGING_LEVEL_KAFKA:INFO}
+    org.apache.kafka: ${LOGGING_LEVEL_APACHE_KAFKA:WARN}
+    org.springframework.data.mongodb: ${LOGGING_LEVEL_MONGODB:INFO}
+    org.springframework.transaction: ${LOGGING_LEVEL_TRANSACTION:INFO}
   pattern:
-    console: "%d{HH:mm:ss.SSS} [%thread] %-5level [%X{correlationId}] %logger{36} - %msg%n"
+    console: "%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}} [%thread] %-5level [%X{correlationId:-}] %logger{50} - %msg%n"
+#    file: "%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}} [%thread] %-5level [%X{correlationId:-}] %logger{50} - %msg%n"
+#  file:
+#    name: ${LOG_FILE:logs/wallet-service.log}
 
 # ==================== MANAGEMENT/ACTUATOR ====================
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics,prometheus
-      base-path: /actuator
+        include: ${ACTUATOR_ENDPOINTS:health,info,metrics,prometheus}
+      base-path: ${ACTUATOR_BASE_PATH:/actuator}
   endpoint:
     health:
-      show-details: always
-      show-components: always
+      show-details: ${ACTUATOR_HEALTH_SHOW_DETAILS:always}
+      show-components: ${ACTUATOR_HEALTH_SHOW_COMPONENTS:always}
   health:
     mongo:
-      enabled: true
+      enabled: ${ACTUATOR_HEALTH_MONGO_ENABLED:true}
     kafka:
-      enabled: true
+      enabled: ${ACTUATOR_HEALTH_KAFKA_ENABLED:true}
+  info:
+    env:
+      enabled: ${ACTUATOR_INFO_ENV_ENABLED:true}
+    java:
+      enabled: ${ACTUATOR_INFO_JAVA_ENABLED:true}
+    build:
+      enabled: ${ACTUATOR_INFO_BUILD_ENABLED:true}
+  metrics:
+    export:
+      prometheus:
+        enabled: ${PROMETHEUS_METRICS_ENABLED:true}
 
 # ==================== WALLET SPECIFIC CONFIG ====================
 wallet:
   # Configurações de Negócio
   business:
-    max-transaction-amount: 1000000.00
-    supported-currencies: BRL,USD,EUR
-    transaction-timeout: 30s
-    min-transaction-amount: 0.01
+    max-transaction-amount: ${WALLET_MAX_TRANSACTION_AMOUNT:1000000.00}
+    supported-currencies: ${WALLET_SUPPORTED_CURRENCIES:BRL,USD,EUR}
+    transaction-timeout: ${WALLET_TRANSACTION_TIMEOUT:30s}
+    min-transaction-amount: ${WALLET_MIN_TRANSACTION_AMOUNT:0.01}
 
   # Configurações do Outbox Pattern
   outbox:
     scheduler:
-      enabled: true
-      fixed-delay: 5000 # 5 segundos
-      initial-delay: 10000 # 10 segundos para dar tempo do Kafka subir
-    batch-size: 100
-    max-retries: 3
+      enabled: ${WALLET_OUTBOX_SCHEDULER_ENABLED:true}
+      # Delay maior em ambientes containerizados para dar tempo de inicialização
+      fixed-delay: ${WALLET_OUTBOX_SCHEDULER_DELAY:5000}
+      initial-delay: ${WALLET_OUTBOX_SCHEDULER_INITIAL_DELAY:10000}
+    batch-size: ${WALLET_OUTBOX_BATCH_SIZE:100}
+    max-retries: ${WALLET_OUTBOX_MAX_RETRIES:3}
 
   # Configurações dos Tópicos Kafka
   kafka:
     topics:
       wallet-events:
-        name: wallet-events
-        partitions: 3
-        replicas: 1
+        name: ${WALLET_KAFKA_TOPIC_EVENTS:wallet-events}
+        partitions: ${WALLET_KAFKA_TOPIC_EVENTS_PARTITIONS:3}
+        replicas: ${WALLET_KAFKA_TOPIC_EVENTS_REPLICAS:1}
       wallet-outbox:
-        name: wallet-outbox
-        partitions: 3
-        replicas: 1
+        name: ${WALLET_KAFKA_TOPIC_OUTBOX:wallet-outbox}
+        partitions: ${WALLET_KAFKA_TOPIC_OUTBOX_PARTITIONS:3}
+        replicas: ${WALLET_KAFKA_TOPIC_OUTBOX_REPLICAS:1}
     consumer:
-      concurrency: 3
-      max-poll-records: 10
+      concurrency: ${WALLET_KAFKA_CONSUMER_CONCURRENCY:3}
+      max-poll-records: ${WALLET_KAFKA_CONSUMER_MAX_POLL_RECORDS:10}
 
   # Configurações de Auditoria
   audit:
-    enabled: true
+    enabled: ${WALLET_AUDIT_ENABLED:true}
     kafka-topic: ${wallet.kafka.topics.wallet-events.name}
 
-  # Configurações de Cache (se necessário)
+  # Configurações de Cache (futuro)
   cache:
-    enabled: false
-    ttl: 300s
-    max-size: 1000
+    enabled: ${WALLET_CACHE_ENABLED:false}
+    ttl: ${WALLET_CACHE_TTL:300s}
+    max-size: ${WALLET_CACHE_MAX_SIZE:1000}
+
+---
+# ==================== PROFILE: LOCAL DEVELOPMENT ====================
+spring:
+  config:
+    activate:
+      on-profile: local
+  docker:
+    compose:
+      enabled: false
+
+logging:
+  level:
+    com.br: DEBUG
+    org.springframework.kafka: INFO
+    org.springframework.data.mongodb: INFO
+
+wallet:
+  outbox:
+    scheduler:
+      initial-delay: 10000 # 10 segundos - Kafka local sobe mais rápido
+
+---
+# ==================== PROFILE: DOCKER DEVELOPMENT ====================
+spring:
+  config:
+    activate:
+      on-profile: docker
+  docker:
+    compose:
+      enabled: false
+
+logging:
+  level:
+    com.br: INFO
+    org.springframework.kafka: WARN
+    org.springframework.data.mongodb: WARN
+
+wallet:
+  outbox:
+    scheduler:
+      initial-delay: 15000 # 15 segundos - Container precisa de mais tempo
+
+---
+# ==================== PROFILE: TESTING ====================
+spring:
+  config:
+    activate:
+      on-profile: test
+
+logging:
+  level:
+    com.br: WARN
+    org.springframework.kafka: ERROR
+    org.springframework.data.mongodb: WARN
+
+wallet:
+  outbox:
+    scheduler:
+      enabled: false # Desabilita scheduler em testes
+  audit:
+    enabled: false # Desabilita auditoria em testes
+
+---
+# ==================== PROFILE: PRODUCTION ====================
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+logging:
+  level:
+    com.br: INFO
+    org.springframework.kafka: WARN
+    org.springframework.data.mongodb: WARN
+    org.apache.kafka: ERROR
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{correlationId:-}] %logger{36} - %msg%n"
+
+management:
+  endpoint:
+    health:
+      show-details: when-authorized
+      show-components: when-authorized
+
+wallet:
+  business:
+    max-transaction-amount: 10000000.00 # Limite maior em produção
+  outbox:
+    scheduler:
+      initial-delay: 30000 # 30 segundos - Ambiente produção mais conservador
+    batch-size: 50 # Batch menor em produção para evitar sobrecarga

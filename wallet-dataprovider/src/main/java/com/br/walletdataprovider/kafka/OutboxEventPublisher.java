@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -35,9 +36,10 @@ public class OutboxEventPublisher implements EventPublisher {
         }
 
         try {
-            String eventData = objectMapper.writeValueAsString(payload);
-            String correlationId = extractCorrelationId(payload);
-            String aggregateId = extractAggregateId(payload);
+            Object processedPayload = processPayload(payload);
+            String eventData = objectMapper.writeValueAsString(processedPayload);
+            String correlationId = extractCorrelationId(processedPayload);
+            String aggregateId = extractAggregateId(processedPayload);
 
             var outboxEvent = OutboxEventDocument.builder()
                     .id(UUID.randomUUID().toString())
@@ -57,6 +59,18 @@ public class OutboxEventPublisher implements EventPublisher {
             log.error("Failed to create outbox event: {}", eventType, e);
             throw new RuntimeException("Failed to create outbox event", e);
         }
+    }
+
+    private Object processPayload(Object payload) {
+        if (payload instanceof Map) {
+            Map<String, Object> map = (Map<String, Object>) payload;
+            Map<String, Object> processedMap = new HashMap<>(map);
+
+            processedMap.remove("timestamp");
+
+            return processedMap;
+        }
+        return payload;
     }
 
     private String extractCorrelationId(Object payload) {
