@@ -14,7 +14,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class KafkaEventPublisher implements EventPublisher {
 
-    @Value("${wallet.events.topic}")
+    @Value("${wallet.kafka.topics.wallet-events.name}")
     private String walletEventsTopic;
 
     private final KafkaTemplate<String, Object> kafkaTemplate;

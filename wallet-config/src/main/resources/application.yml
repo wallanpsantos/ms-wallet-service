@@ -13,8 +13,9 @@ spring:
   # ==================== MONGODB CONFIG ====================
   data:
     mongodb:
-      uri: mongodb://localhost:27017/wallet_db
-      auto-index-creation: true
+      # Use a URI do seu arquivo .env para autenticação local
+      uri: ${MONGO_URL:mongodb://admin:admin123@localhost:27017/wallet_db?authSource=admin}
+      auto-index-creation: false
 
   # ==================== KAFKA CONFIG ====================
   kafka:
@@ -46,8 +47,7 @@ spring:
       fetch-min-size: 1024
       fetch-max-wait: 500
       properties:
-        spring.json.trusted.packages: "com.br.walletcore.domain,com.br.walletdataprovider.kafka.event,java.util,java.lang"
-        spring.json.type.mapping: "walletEvent:com.br.walletdataprovider.kafka.event.WalletEvent"
+        spring.json.trusted.packages: "*"
 
     # Configurações dos Tópicos
     admin:

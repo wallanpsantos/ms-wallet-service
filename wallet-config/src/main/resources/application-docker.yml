@@ -9,8 +9,8 @@ spring:
   # ==================== MONGODB CONFIG DOCKER ====================
   data:
     mongodb:
-      uri: ${MONGO_URL}
-      auto-index-creation: true
+      uri: ${MONGO_URL:mongodb://admin:admin123@localhost:27017/wallet_db?authSource=admin}
+      auto-index-creation: false
 
   # ==================== KAFKA CONFIG DOCKER ====================
   kafka:
