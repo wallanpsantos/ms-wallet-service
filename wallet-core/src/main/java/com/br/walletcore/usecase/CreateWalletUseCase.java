@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.UUID;
 
 import static com.br.walletcore.enums.WalletEventType.WALLET_CREATED;
 
@@ -29,12 +28,10 @@ public class CreateWalletUseCase {
         });
 
         var wallet = Wallet.builder()
-                .id(UUID.randomUUID().toString())
                 .userId(userId)
                 .balance(Money.of(BigDecimal.ZERO, currency))
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
-                .version(0L)
                 .build();
 
         Wallet savedWallet = walletRepository.save(wallet);
