@@ -10,7 +10,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -40,7 +39,6 @@ public class OutboxEventProcessor {
 
     @Scheduled(fixedDelayString = "${wallet.outbox.scheduler.fixed-delay}",
             initialDelayString = "${wallet.outbox.scheduler.initial-delay}")
-    @Transactional
     public void processOutboxEvents() {
         if (!auditEnabled) {
             log.trace("Audit disabled, skipping outbox processing");
