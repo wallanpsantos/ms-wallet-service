@@ -141,6 +141,4 @@
                 └── com
                     └── br
                         └── walletentrypoint
-                            └── WalletEntrypointApplicationTests.java
-
-79 directories, 65 files
+                            └── WalletEntrypointApplicationTests.javas
