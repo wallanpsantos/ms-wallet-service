@@ -1,6 +1,7 @@
 package com.br.walletconfig.usecase;
 
-import com.br.walletcore.port.events.EventPublisher;
+import com.br.walletcore.port.events.OutboxEventPublisher;
+import com.br.walletcore.port.events.WalletEventPublisher;
 import com.br.walletcore.port.repositories.WalletRepository;
 import com.br.walletcore.usecase.CreateWalletUseCase;
 import com.br.walletcore.usecase.DepositUseCase;
@@ -18,8 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class UseCaseConfig {
 
     @Bean
-    public CreateWalletUseCase createWalletUseCase(WalletRepository walletRepository, EventPublisher eventPublisher) {
-        return new CreateWalletUseCase(walletRepository, eventPublisher);
+    public CreateWalletUseCase createWalletUseCase(WalletRepository walletRepository, WalletEventPublisher walletEventPublisher, OutboxEventPublisher outboxEventPublisher) {
+        return new CreateWalletUseCase(walletRepository, walletEventPublisher, outboxEventPublisher);
     }
 
     @Bean
@@ -29,20 +30,20 @@ public class UseCaseConfig {
 
     @Bean
     @Transactional
-    public DepositUseCase depositUseCase(WalletRepository walletRepository, EventPublisher eventPublisher) {
-        return new DepositUseCase(walletRepository, eventPublisher);
+    public DepositUseCase depositUseCase(WalletRepository walletRepository, WalletEventPublisher walletEventPublisher, OutboxEventPublisher outboxEventPublisher) {
+        return new DepositUseCase(walletRepository, walletEventPublisher, outboxEventPublisher);
     }
 
     @Bean
     @Transactional
-    public WithdrawUseCase withdrawUseCase(WalletRepository walletRepository, EventPublisher eventPublisher) {
-        return new WithdrawUseCase(walletRepository, eventPublisher);
+    public WithdrawUseCase withdrawUseCase(WalletRepository walletRepository, WalletEventPublisher walletEventPublisher, OutboxEventPublisher outboxEventPublisher) {
+        return new WithdrawUseCase(walletRepository, walletEventPublisher, outboxEventPublisher);
     }
 
     @Bean
     @Transactional
-    public TransferUseCase transferUseCase(WalletRepository walletRepository, EventPublisher eventPublisher) {
-        return new TransferUseCase(walletRepository, eventPublisher);
+    public TransferUseCase transferUseCase(WalletRepository walletRepository, WalletEventPublisher walletEventPublisher, OutboxEventPublisher outboxEventPublisher) {
+        return new TransferUseCase(walletRepository, walletEventPublisher, outboxEventPublisher);
     }
 
     @Bean

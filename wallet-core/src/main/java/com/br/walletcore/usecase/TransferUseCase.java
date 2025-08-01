@@ -4,11 +4,13 @@ import com.br.walletcore.domain.Money;
 import com.br.walletcore.domain.Wallet;
 import com.br.walletcore.domain.WalletTransaction;
 import com.br.walletcore.enums.TransactionType;
-import com.br.walletcore.port.events.EventPublisher;
+import com.br.walletcore.port.events.OutboxEventPublisher;
+import com.br.walletcore.port.events.WalletEventPublisher;
 import com.br.walletcore.port.repositories.WalletRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +23,8 @@ import static com.br.walletcore.enums.WalletEventType.FUNDS_TRANSFERRED;
 public class TransferUseCase {
 
     private final WalletRepository walletRepository;
-    private final EventPublisher eventPublisher;
+    private final WalletEventPublisher walletEventPublisher;
+    private final OutboxEventPublisher outboxEventPublisher;
 
     public List<WalletTransaction> transfer(String fromUserId, String toUserId, Money amount) {
         String correlationId = UUID.randomUUID().toString();
@@ -78,7 +81,28 @@ public class TransferUseCase {
 
         walletRepository.saveTransaction(depositTransaction);
 
-        eventPublisher.publishWalletEvent(FUNDS_TRANSFERRED.getName(), Map.ofEntries(
+        walletEventPublisher.publishWalletEvent(FUNDS_TRANSFERRED.getName(),
+                getPayload(fromUserId, toUserId, amount, correlationId, sourceWallet, targetWallet, sourceBalance, updatedSourceWallet, targetBalance, updatedTargetWallet, depositTransaction));
+
+        outboxEventPublisher.publishOutboxEvent(FUNDS_TRANSFERRED.getName(),
+                getPayload(fromUserId, toUserId, amount, correlationId, sourceWallet, targetWallet, sourceBalance, updatedSourceWallet, targetBalance, updatedTargetWallet, depositTransaction));
+
+        log.info("Transfer completed successfully from {} to {}", fromUserId, toUserId);
+        return List.of(withdrawTransaction, depositTransaction);
+    }
+
+    private static Map<String, ? extends Serializable> getPayload(String fromUserId,
+                                                                  String toUserId,
+                                                                  Money amount,
+                                                                  String correlationId,
+                                                                  Wallet sourceWallet,
+                                                                  Wallet targetWallet,
+                                                                  Money sourceBalance,
+                                                                  Wallet updatedSourceWallet,
+                                                                  Money targetBalance,
+                                                                  Wallet updatedTargetWallet,
+                                                                  WalletTransaction depositTransaction) {
+        return Map.ofEntries(
                 Map.entry("correlationId", correlationId),
                 Map.entry("sourceWalletId", sourceWallet.getId()),
                 Map.entry("targetWalletId", targetWallet.getId()),
@@ -91,9 +115,6 @@ public class TransferUseCase {
                 Map.entry("targetBalanceBefore", targetBalance.getAmount()),
                 Map.entry("targetBalanceAfter", updatedTargetWallet.getBalance().getAmount()),
                 Map.entry("timestamp", depositTransaction.getTimestamp().toString())
-        ));
-
-        log.info("Transfer completed successfully from {} to {}", fromUserId, toUserId);
-        return List.of(withdrawTransaction, depositTransaction);
+        );
     }
 }

@@ -1,6 +1,6 @@
 package com.br.walletdataprovider.kafka;
 
-import com.br.walletcore.port.events.EventPublisher;
+import com.br.walletcore.port.events.WalletEventPublisher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,7 +14,7 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 @Qualifier("kafkaEventPublisher")
-public class KafkaEventPublisher implements EventPublisher {
+public class KafkaWalletEventPublisher implements WalletEventPublisher {
 
     @Value("${wallet.kafka.topics.wallet-events.name}")
     private String walletEventsTopic;

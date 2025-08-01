@@ -14,6 +14,28 @@ spring:
     compose:
       enabled: ${DOCKER_COMPOSE_ENABLED:false}
 
+  # ==================== JACKSON CONFIGURATION ====================
+  jackson:
+    # Configuração para serializar datas como String ISO 8601
+    serialization:
+      write-dates-as-timestamps: false  # NÃO serializar como array de números
+      write-date-timestamps-as-nanoseconds: false
+      write-durations-as-timestamps: false
+
+    # Configuração para deserialização
+    deserialization:
+      read-date-timestamps-as-nanoseconds: false
+      adjust-dates-to-context-time-zone: false
+
+    # Formato padrão para datas
+    date-format: ${SPRING_JACKSON_DATE_FORMAT:"yyyy-MM-dd'T'HH:mm:ss.SSSSSS"}
+
+    # Configuração de timezone (opcional)
+    time-zone: ${SPRING_JACKSON_TIME_ZONE:"America/Sao_Paulo"}
+
+    # Outras configurações úteis
+    default-property-inclusion: ${SPRING_JACKSON_DEFAULT_PROPERTY_INCLUSION:non_null}
+
   # ==================== MONGODB CONFIG ====================
   data:
     mongodb:
