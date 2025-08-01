@@ -18,7 +18,7 @@ spring:
   data:
     mongodb:
       uri: ${MONGO_URL:mongodb://admin:admin123@localhost:27017/wallet_db?authSource=admin}
-      auto-index-creation: false
+      auto-index-creation: true
 
   # ==================== KAFKA CONFIG ====================
   kafka:
