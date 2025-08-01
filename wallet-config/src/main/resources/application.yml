@@ -6,6 +6,10 @@ spring:
   application:
     name: ms-wallet-service
 
+  docker:
+    compose:
+      enabled: false
+
   # ==================== MONGODB CONFIG ====================
   data:
     mongodb:
