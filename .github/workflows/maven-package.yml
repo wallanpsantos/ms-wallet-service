@@ -1,4 +1,6 @@
 name: Build and Test Java Multi-Module Project
+permissions:
+  contents: read
 
 on:
   push:
