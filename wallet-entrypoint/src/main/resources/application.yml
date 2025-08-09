@@ -1,3 +1,12 @@
 spring:
   application:
     name: ms-wallet-service
+
+  # Alternativa ao uso da anotação @JsonInclude(JsonInclude.Include.NON_NULL)
+  jackson:
+    default-property-inclusion: NON_NULL
+#      - ALWAYS - Sempre inclui a propriedade, independentemente do seu valor (`null` ou não)
+#      - NON_NULL - Exclui apenas valores `null`
+#      - NON_EMPTY - Exclui `null`, strings vazias (`""`), coleções vazias
+#      - NON_DEFAULT - Exclui valores padrão (null, false, 0, coleções vazias)
+#      - Para Optional e outros wrappers NON_ABSENT
