@@ -6,6 +6,7 @@ import com.br.walletcore.port.repositories.WalletRepository;
 import com.br.walletcore.usecase.CreateWalletUseCase;
 import com.br.walletcore.usecase.DepositUseCase;
 import com.br.walletcore.usecase.GetBalanceUseCase;
+import com.br.walletcore.usecase.GetHistoricalBalance;
 import com.br.walletcore.usecase.GetWalletUseCase;
 import com.br.walletcore.usecase.TransferUseCase;
 import com.br.walletcore.usecase.WithdrawUseCase;
@@ -26,6 +27,11 @@ public class UseCaseConfig {
     @Bean
     public GetBalanceUseCase getBalanceUseCase(WalletRepository walletRepository) {
         return new GetBalanceUseCase(walletRepository);
+    }
+
+    @Bean
+    public GetHistoricalBalance getHistoricalBalance(WalletRepository walletRepository) {
+        return new GetHistoricalBalance(walletRepository);
     }
 
     @Bean

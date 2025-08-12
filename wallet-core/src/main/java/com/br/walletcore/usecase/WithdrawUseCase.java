@@ -25,7 +25,7 @@ public class WithdrawUseCase {
     private final WalletEventPublisher walletEventPublisher;
     private final OutboxEventPublisher outboxEventPublisher;
 
-    public WalletTransaction withdraw(String userId, Money amount) {
+    public WalletTransaction execute(String userId, Money amount) {
         log.info("Processing withdrawal for user: {}, amount: {}", userId, amount);
 
         Wallet wallet = walletRepository.findByUserId(userId)

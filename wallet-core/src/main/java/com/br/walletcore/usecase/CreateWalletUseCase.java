@@ -23,7 +23,7 @@ public class CreateWalletUseCase {
     private final WalletEventPublisher walletEventPublisher;
     private final OutboxEventPublisher outboxEventPublisher;
 
-    public Wallet createWallet(String userId, String currency) {
+    public Wallet execute(String userId, String currency) {
         log.info("Creating wallet for user: {}", userId);
 
         walletRepository.findByUserId(userId).ifPresent(w -> {

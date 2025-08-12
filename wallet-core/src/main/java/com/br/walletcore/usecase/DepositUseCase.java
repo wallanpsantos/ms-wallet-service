@@ -28,7 +28,7 @@ public class DepositUseCase {
     private final WalletEventPublisher walletEventPublisher;
     private final OutboxEventPublisher outboxEventPublisher;
 
-    public WalletTransaction deposit(String userId, Money amount) {
+    public WalletTransaction execute(String userId, Money amount) {
         log.info("Processing deposit for user: {}, amount: {}", userId, amount);
 
         Wallet wallet = walletRepository.findByUserId(userId)

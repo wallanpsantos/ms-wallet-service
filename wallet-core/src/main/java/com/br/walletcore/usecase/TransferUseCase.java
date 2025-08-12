@@ -26,7 +26,7 @@ public class TransferUseCase {
     private final WalletEventPublisher walletEventPublisher;
     private final OutboxEventPublisher outboxEventPublisher;
 
-    public List<WalletTransaction> transfer(String fromUserId, String toUserId, Money amount) {
+    public List<WalletTransaction> execute(String fromUserId, String toUserId, Money amount) {
         String correlationId = UUID.randomUUID().toString();
         log.info("Processing transfer from: {} to: {}, amount: {}, correlationId: {}",
                 fromUserId, toUserId, amount, correlationId);

@@ -11,7 +11,7 @@ public class GetWalletUseCase {
 
     private final WalletRepository walletRepository;
 
-    public Wallet getWalletByUserId(String userId) {
+    public Wallet execute(String userId) {
         log.info("Getting wallet for user: {}", userId);
 
         if (userId == null || userId.trim().isEmpty()) {

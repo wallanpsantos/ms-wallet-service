@@ -3,12 +3,7 @@ package com.br.walletentrypoint.rest;
 import com.br.walletcore.domain.Money;
 import com.br.walletcore.domain.Wallet;
 import com.br.walletcore.domain.WalletTransaction;
-import com.br.walletcore.usecase.CreateWalletUseCase;
-import com.br.walletcore.usecase.DepositUseCase;
-import com.br.walletcore.usecase.GetBalanceUseCase;
-import com.br.walletcore.usecase.GetWalletUseCase;
-import com.br.walletcore.usecase.TransferUseCase;
-import com.br.walletcore.usecase.WithdrawUseCase;
+import com.br.walletentrypoint.rest.facade.WalletFacade;
 import com.br.walletentrypoint.rest.mapper.WalletResponseMapper;
 import com.br.walletentrypoint.rest.request.CreateWalletRequest;
 import com.br.walletentrypoint.rest.request.DepositRequest;
@@ -40,19 +35,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WalletController {
 
-    private final CreateWalletUseCase createWalletUseCase;
-    private final GetWalletUseCase getWalletUseCase;
-    private final DepositUseCase depositUseCase;
-    private final WithdrawUseCase withdrawUseCase;
-    private final TransferUseCase transferUseCase;
-    private final GetBalanceUseCase getBalanceUseCase;
+    private final WalletFacade walletFacade;
     private final WalletResponseMapper responseMapper;
 
     @PostMapping
     public ResponseEntity<WalletResponse> createWallet(@Valid @RequestBody CreateWalletRequest request) {
         log.info("Creating wallet for user: {}", request.userId());
 
-        Wallet wallet = createWalletUseCase.createWallet(request.userId(), request.currency());
+        Wallet wallet = walletFacade.createWallet(request.userId(), request.currency());
         WalletResponse response = responseMapper.toWalletResponse(wallet);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -62,7 +52,7 @@ public class WalletController {
     public ResponseEntity<WalletResponse> getWallet(@PathVariable String userId) {
         log.info("Getting wallet for user: {}", userId);
 
-        Wallet wallet = getWalletUseCase.getWalletByUserId(userId);
+        Wallet wallet = walletFacade.getWallet(userId);
         WalletResponse response = responseMapper.toWalletResponse(wallet);
 
         return ResponseEntity.ok(response);
@@ -75,7 +65,7 @@ public class WalletController {
         log.info("Processing deposit for user: {}", userId);
 
         Money amount = Money.of(request.amount(), request.currency());
-        WalletTransaction transaction = depositUseCase.deposit(userId, amount);
+        WalletTransaction transaction = walletFacade.deposit(userId, amount);
         TransactionResponse response = responseMapper.toTransactionResponse(transaction);
 
         return ResponseEntity.ok(response);
@@ -88,7 +78,7 @@ public class WalletController {
         log.info("Processing withdrawal for user: {}", userId);
 
         Money amount = Money.of(request.amount(), request.currency());
-        WalletTransaction transaction = withdrawUseCase.withdraw(userId, amount);
+        WalletTransaction transaction = walletFacade.withdraw(userId, amount);
         TransactionResponse response = responseMapper.toTransactionResponse(transaction);
 
         return ResponseEntity.ok(response);
@@ -99,7 +89,7 @@ public class WalletController {
         log.info("Processing transfer from {} to {}", request.fromUserId(), request.toUserId());
 
         Money amount = Money.of(request.amount(), request.currency());
-        List<WalletTransaction> transactions = transferUseCase.transfer(
+        List<WalletTransaction> transactions = walletFacade.transfer(
                 request.fromUserId(),
                 request.toUserId(),
                 amount
@@ -113,7 +103,7 @@ public class WalletController {
     public ResponseEntity<BalanceResponse> getCurrentBalance(@PathVariable String userId) {
         log.info("Getting current balance for user: {}", userId);
 
-        Money balance = getBalanceUseCase.getCurrentBalance(userId);
+        Money balance = walletFacade.getBalance(userId);
         BalanceResponse response = responseMapper.toBalanceResponse(userId, balance);
 
         return ResponseEntity.ok(response);
@@ -126,7 +116,7 @@ public class WalletController {
 
         log.info("Getting historical balance for user: {} at date: {}", userId, date);
 
-        Money balance = getBalanceUseCase.getHistoricalBalance(userId, date);
+        Money balance = walletFacade.getHistoricalBalance(userId, date);
         BalanceResponse response = responseMapper.toBalanceResponse(userId, balance);
 
         return ResponseEntity.ok(List.of(response));
