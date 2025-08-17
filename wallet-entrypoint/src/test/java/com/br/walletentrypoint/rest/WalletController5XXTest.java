@@ -209,7 +209,7 @@ class WalletController5XXTest {
     void shouldReturn500WhenGenericExceptionOccurs() {
         // Given
         when(walletFacade.getHistoricalBalance(anyString(), any(LocalDate.class)))
-                .thenThrow(new Exception("Generic checked exception"));
+                .thenThrow(new RuntimeException("Generic checked exception"));
 
         // When & Then
         given()
@@ -219,10 +219,10 @@ class WalletController5XXTest {
                 .then()
                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .body("statusCode", equalTo(500))
-                .body("title", equalTo("Unexpected Error"))
+                .body("title", equalTo("Internal Server Error"))
                 .body("message", equalTo("An unexpected error occurred while processing the request"))
                 .body("details[0].field", equalTo("system"))
-                .body("details[0].message", equalTo("Unexpected error occurred"));
+                .body("details[0].message", equalTo("Internal server error"));
     }
 
     @Test
@@ -230,7 +230,7 @@ class WalletController5XXTest {
     void shouldReturn500WhenGenericCheckedExceptionOccurs() {
         // Given
         when(walletFacade.createWallet(anyString(), anyString()))
-                .thenThrow(new Exception("Checked exception in wallet creation"));
+                .thenThrow(new RuntimeException("Checked exception in wallet creation"));
 
         // When & Then
         given()
@@ -246,10 +246,10 @@ class WalletController5XXTest {
                 .then()
                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .body("statusCode", equalTo(500))
-                .body("title", equalTo("Unexpected Error"))
+                .body("title", equalTo("Internal Server Error"))
                 .body("message", equalTo("An unexpected error occurred while processing the request"))
                 .body("details[0].field", equalTo("system"))
-                .body("details[0].message", equalTo("Unexpected error occurred"));
+                .body("details[0].message", equalTo("Internal server error"));
     }
 
     // ==================== FACADE/MAPPER SPECIFIC ERRORS (500) ====================
@@ -427,7 +427,7 @@ class WalletController5XXTest {
     void shouldReturn500WhenIOExceptionOccurs() {
         // Given - Simulando IOException (checked exception)
         when(walletFacade.createWallet(anyString(), anyString()))
-                .thenThrow(new Exception("IO error during wallet creation"));
+                .thenThrow(new RuntimeException("IO error during wallet creation"));
 
         // When & Then
         given()
@@ -443,10 +443,10 @@ class WalletController5XXTest {
                 .then()
                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .body("statusCode", equalTo(500))
-                .body("title", equalTo("Unexpected Error"))
+                .body("title", equalTo("Internal Server Error"))
                 .body("message", equalTo("An unexpected error occurred while processing the request"))
                 .body("details[0].field", equalTo("system"))
-                .body("details[0].message", equalTo("Unexpected error occurred"));
+                .body("details[0].message", equalTo("Internal server error"));
     }
 
     @Test
@@ -454,7 +454,7 @@ class WalletController5XXTest {
     void shouldReturn500WhenSerializationFails() {
         // Given - Simulando erro de serialização
         when(walletFacade.deposit(anyString(), any(Money.class)))
-                .thenThrow(new Exception("Response serialization error"));
+                .thenThrow(new RuntimeException("Response serialization error"));
 
         // When & Then
         given()
@@ -470,9 +470,9 @@ class WalletController5XXTest {
                 .then()
                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .body("statusCode", equalTo(500))
-                .body("title", equalTo("Unexpected Error"))
+                .body("title", equalTo("Internal Server Error"))
                 .body("message", equalTo("An unexpected error occurred while processing the request"))
                 .body("details[0].field", equalTo("system"))
-                .body("details[0].message", equalTo("Unexpected error occurred"));
+                .body("details[0].message", equalTo("Internal server error"));
     }
 }
