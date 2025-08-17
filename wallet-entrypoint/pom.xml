@@ -63,4 +63,8 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <finalName>wallet-entrypoint</finalName>
+    </build>
+
 </project>

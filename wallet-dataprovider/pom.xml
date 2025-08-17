@@ -52,4 +52,8 @@
 
     </dependencies>
 
+    <build>
+        <finalName>wallet-dataprovider</finalName>
+    </build>
+
 </project>

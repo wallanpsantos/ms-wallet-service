@@ -48,7 +48,7 @@ WORKDIR /app
 
 # --- Cópia do Artefato Específico ---
 # Copia apenas o JAR executável do módulo de configuração (o principal)
-COPY --from=builder /app/wallet-config/target/wallet-config-1.0.0.jar app.jar
+COPY --from=builder /app/wallet-config/target/wallet-config.jar app.jar
 
 # Expor a porta da aplicação
 EXPOSE 8080
@@ -59,10 +59,14 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
 
 # --- Entrypoint Otimizado ---
 # Executa a JVM diretamente, permitindo que ela receba sinais do SO
+## Configuração de JVM otimizada para Containers
 ENTRYPOINT ["java", \
             "-XX:+UseContainerSupport", \
-            "-XX:MaxRAMPercentage=75.0", \
+            "-XX:+AlwaysPreTouch", \
+            "-XX:InitialRAMPercentage=30.0", \
+            "-XX:MaxRAMPercentage=80.0", \
             "-XX:+UseG1GC", \
             "-Djava.security.egd=file:/dev/./urandom", \
+            "-Djava.net.preferIPv4Stack=true", \
             "-jar", \
             "app.jar"]
