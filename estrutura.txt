@@ -1,17 +1,21 @@
 .
+├── doc
+│ ├── collection
+│ │ └── [ms-wallet-service].postman_collection.json
+│ └── others
+│     └── Baseline Design for Project Architecture - Clean Architecture Multi-Module Simplified.jpg
 ├── docker
-│ ├── mongodb
-│ │ └── init-mongo.js
-│ └── nginx
-│     ├── default.conf
-│     └── nginx.conf
-├── docker-compose.dev.yml
+│ └── mongodb
+│     └── init-mongo.js
+├── docker-compose.yml
 ├── Dockerfile
 ├── estrutura.txt
 ├── HELP.md
+├── LICENSE
 ├── mvnw
 ├── mvnw.cmd
 ├── pom.xml
+├── README.md
 ├── wallet-config
 │ ├── pom.xml
 │ └── src
@@ -21,6 +25,7 @@
 │     │ │     └── br
 │     │ │         └── walletconfig
 │     │ │             ├── kafka
+│     │ │             │ ├── EventPublisherConfig.java
 │     │ │             │ └── KafkaConfig.java
 │     │ │             ├── mongodb
 │     │ │             │ └── MongoConfig.java
@@ -28,14 +33,12 @@
 │     │ │             │ └── UseCaseConfig.java
 │     │ │             └── WalletConfigApplication.java
 │     │ └── resources
-│     │     ├── application-docker.yml
 │     │     └── application.yml
 │     └── test
 │         └── java
 │             └── com
 │                 └── br
 │                     └── walletconfig
-│                         └── WalletConfigApplicationTests.java
 ├── wallet-core
 │ ├── pom.xml
 │ └── src
@@ -49,6 +52,7 @@
 │     │ │             │ ├── Wallet.java
 │     │ │             │ └── WalletTransaction.java
 │     │ │             ├── enums
+│     │ │             │ ├── CurrencyType.java
 │     │ │             │ ├── TransactionType.java
 │     │ │             │ └── WalletEventType.java
 │     │ │             ├── exceptions
@@ -57,13 +61,15 @@
 │     │ │             │     └── ErrorMessage.java
 │     │ │             ├── port
 │     │ │             │ ├── events
-│     │ │             │ │ └── EventPublisher.java
+│     │ │             │ │ ├── OutboxEventPublisher.java
+│     │ │             │ │ └── WalletEventPublisher.java
 │     │ │             │ └── repositories
 │     │ │             │     └── WalletRepository.java
 │     │ │             └── usecase
 │     │ │                 ├── CreateWalletUseCase.java
 │     │ │                 ├── DepositUseCase.java
 │     │ │                 ├── GetBalanceUseCase.java
+│     │ │                 ├── GetHistoricalBalance.java
 │     │ │                 ├── GetWalletUseCase.java
 │     │ │                 ├── TransferUseCase.java
 │     │ │                 └── WithdrawUseCase.java
@@ -74,7 +80,6 @@
 │             └── com
 │                 └── br
 │                     └── walletcore
-│                         └── WalletCoreApplicationTests.java
 ├── wallet-dataprovider
 │ ├── pom.xml
 │ └── src
@@ -86,23 +91,25 @@
 │     │ │             ├── kafka
 │     │ │             │ ├── consumer
 │     │ │             │ │ └── WalletEventConsumer.java
-│     │ │             │ ├── KafkaEventPublisher.java
+│     │ │             │ ├── KafkaWalletEventPublisher.java
 │     │ │             │ ├── OutboxEventProcessor.java
-│     │ │             │ └── OutboxEventPublisher.java
-│     │ │             └── mongodb
-│     │ │                 ├── document
-│     │ │                 │ ├── OutboxEventDocument.java
-│     │ │                 │ ├── WalletDocument.java
-│     │ │                 │ └── WalletTransactionDocument.java
-│     │ │                 ├── mapper
-│     │ │                 │ ├── WalletMapper.java
-│     │ │                 │ └── WalletTransactionMapper.java
-│     │ │                 └── repository
-│     │ │                     ├── impl
-│     │ │                     │ └── WalletRepositoryImpl.java
-│     │ │                     ├── OutboxEventMongoRepository.java
-│     │ │                     ├── WalletMongoRepository.java
-│     │ │                     └── WalletTransactionMongoRepository.java
+│     │ │             │ └── OutboxWalletEventPublisher.java
+│     │ │             ├── mongodb
+│     │ │             │ ├── document
+│     │ │             │ │ ├── OutboxEventDocument.java
+│     │ │             │ │ ├── WalletDocument.java
+│     │ │             │ │ └── WalletTransactionDocument.java
+│     │ │             │ ├── mapper
+│     │ │             │ │ ├── WalletMapper.java
+│     │ │             │ │ └── WalletTransactionMapper.java
+│     │ │             │ └── repository
+│     │ │             │     ├── impl
+│     │ │             │     │ └── WalletRepositoryImpl.java
+│     │ │             │     ├── OutboxEventMongoRepository.java
+│     │ │             │     ├── WalletMongoRepository.java
+│     │ │             │     └── WalletTransactionMongoRepository.java
+│     │ │             └── utils
+│     │ │                 └── EventPayloadAccessor.java
 │     │ └── resources
 │     │     └── application.yml
 │     └── test
@@ -110,7 +117,6 @@
 │             └── com
 │                 └── br
 │                     └── walletdataprovider
-│                         └── WalletDataproviderApplicationTests.java
 └── wallet-entrypoint
     ├── pom.xml
     └── src
@@ -119,9 +125,13 @@
         │ │ └── com
         │ │     └── br
         │ │         └── walletentrypoint
+        │ │             ├── config
+        │ │             │ └── usecase
         │ │             ├── exceptions
         │ │             │ └── ValidationExceptionHandler.java
         │ │             └── rest
+        │ │                 ├── facade
+        │ │                 │ └── WalletFacade.java
         │ │                 ├── mapper
         │ │                 │ └── WalletResponseMapper.java
         │ │                 ├── request
@@ -141,4 +151,7 @@
                 └── com
                     └── br
                         └── walletentrypoint
-                            └── WalletEntrypointApplicationTests.javas
+                            └── rest
+                                └── WalletController2XXTest.java
+
+87 directories, 68 files
