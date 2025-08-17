@@ -67,7 +67,7 @@ class WalletController4XXTest {
                 .post(BASE_PATH)
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("statusCode", equalTo(400))
+                .body("statusCode", equalTo(HttpStatus.BAD_REQUEST.value()))
                 .body("title", equalTo("Validation Failed"))
                 .body("details", hasSize(1))
                 .body("details[0].field", equalTo("userId"))
@@ -89,7 +89,7 @@ class WalletController4XXTest {
                 .post(BASE_PATH)
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("statusCode", equalTo(400))
+                .body("statusCode", equalTo(HttpStatus.BAD_REQUEST.value()))
                 .body("title", equalTo("Validation Failed"))
                 .body("details", hasSize(1))
                 .body("details[0].field", equalTo("currency"))
@@ -111,7 +111,7 @@ class WalletController4XXTest {
                 .post(BASE_PATH)
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("statusCode", equalTo(400))
+                .body("statusCode", equalTo(HttpStatus.BAD_REQUEST.value()))
                 .body("title", equalTo("Validation Failed"))
                 .body("details", hasSize(2))
                 .body("details.field", hasItem("userId"))
@@ -133,7 +133,7 @@ class WalletController4XXTest {
                 .post(BASE_PATH + "/{userId}/deposit", "688c2e05c0514a144d4bd13c")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("statusCode", equalTo(400))
+                .body("statusCode", equalTo(HttpStatus.BAD_REQUEST.value()))
                 .body("title", equalTo("Validation Failed"))
                 .body("details[0].field", equalTo("amount"))
                 .body("details[0].message", equalTo("Amount must be greater than zero"));
@@ -154,7 +154,7 @@ class WalletController4XXTest {
                 .post(BASE_PATH + "/{userId}/withdraw", "688c2e05c0514a144d4bd13c")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("statusCode", equalTo(400))
+                .body("statusCode", equalTo(HttpStatus.BAD_REQUEST.value()))
                 .body("title", equalTo("Validation Failed"))
                 .body("details[0].field", equalTo("amount"))
                 .body("details[0].message", equalTo("Amount must be greater than zero"));
@@ -177,7 +177,7 @@ class WalletController4XXTest {
                 .post(BASE_PATH + "/transfer")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("statusCode", equalTo(400))
+                .body("statusCode", equalTo(HttpStatus.BAD_REQUEST.value()))
                 .body("title", equalTo("Validation Failed"))
                 .body("details[0].field", equalTo("fromUserId"))
                 .body("details[0].message", equalTo("Source user ID is required"));
@@ -192,7 +192,7 @@ class WalletController4XXTest {
                 .get(BASE_PATH + "/{userId}/balance/historical", "688c2e05c0514a144d4bd13c")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("statusCode", equalTo(400))
+                .body("statusCode", equalTo(HttpStatus.BAD_REQUEST.value()))
                 .body("title", equalTo("Invalid Parameter Type"));
     }
 
@@ -211,7 +211,7 @@ class WalletController4XXTest {
                 .post(BASE_PATH)
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("statusCode", equalTo(400))
+                .body("statusCode", equalTo(HttpStatus.BAD_REQUEST.value()))
                 .body("title", equalTo("Invalid Request Body"))
                 .body("details[0].field", equalTo("requestBody"))
                 .body("details[0].message", equalTo("Invalid JSON format"));
@@ -239,7 +239,7 @@ class WalletController4XXTest {
                 .post(BASE_PATH)
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("statusCode", equalTo(400))
+                .body("statusCode", equalTo(HttpStatus.BAD_REQUEST.value()))
                 .body("title", equalTo("Business Rule Violation"))
                 .body("message", equalTo("User already has a wallet"))
                 .body("details[0].field", equalTo("businessRule"))
@@ -267,7 +267,7 @@ class WalletController4XXTest {
                 .post(BASE_PATH + "/{userId}/deposit", userId)
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("statusCode", equalTo(400))
+                .body("statusCode", equalTo(HttpStatus.BAD_REQUEST.value()))
                 .body("title", equalTo("Business Rule Violation"))
                 .body("message", equalTo("Wallet not found for user: " + userId));
     }
@@ -292,7 +292,7 @@ class WalletController4XXTest {
                 .post(BASE_PATH + "/{userId}/withdraw", "688c2e05c0514a144d4bd13c")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("statusCode", equalTo(400))
+                .body("statusCode", equalTo(HttpStatus.BAD_REQUEST.value()))
                 .body("title", equalTo("Business Rule Violation"))
                 .body("message", equalTo("Insufficient funds"));
     }
@@ -319,7 +319,7 @@ class WalletController4XXTest {
                 .post(BASE_PATH + "/transfer")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("statusCode", equalTo(400))
+                .body("statusCode", equalTo(HttpStatus.BAD_REQUEST.value()))
                 .body("title", equalTo("Business Rule Violation"))
                 .body("message", equalTo("Currency mismatch between wallets"));
     }
@@ -347,7 +347,7 @@ class WalletController4XXTest {
                 .post(BASE_PATH + "/transfer")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("statusCode", equalTo(400))
+                .body("statusCode", equalTo(HttpStatus.BAD_REQUEST.value()))
                 .body("title", equalTo("Business Rule Violation"))
                 .body("message", equalTo("Cannot transfer to same user"));
     }
@@ -367,7 +367,7 @@ class WalletController4XXTest {
                 .get(BASE_PATH + "/{userId}/balance/historical", "688c2e05c0514a144d4bd13c")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("statusCode", equalTo(400))
+                .body("statusCode", equalTo(HttpStatus.BAD_REQUEST.value()))
                 .body("title", equalTo("Business Rule Violation"))
                 .body("message", equalTo("Date cannot be in the future"));
     }
@@ -386,7 +386,7 @@ class WalletController4XXTest {
                 .get(BASE_PATH + "/{userId}", nonexistentUserId)
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("statusCode", equalTo(400))
+                .body("statusCode", equalTo(HttpStatus.BAD_REQUEST.value()))
                 .body("title", equalTo("Business Rule Violation"))
                 .body("message", equalTo("Wallet not found for user: " + nonexistentUserId));
     }
@@ -402,7 +402,7 @@ class WalletController4XXTest {
                 .get(BASE_PATH + "/{userId}/balance/historical", "688c2e05c0514a144d4bd13c")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("statusCode", equalTo(400))
+                .body("statusCode", equalTo(HttpStatus.BAD_REQUEST.value()))
                 .body("title", equalTo("Missing Required Parameter"))
                 .body("message", equalTo("One or more required parameters are missing"))
                 .body("details[0].field", equalTo("date"))
