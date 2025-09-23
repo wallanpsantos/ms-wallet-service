@@ -23,6 +23,20 @@ services:
       retries: 5
       start_period: 60s
 
+  postgresql:
+    image: postgres:17.6-alpine
+    container_name: wallet-postgresql
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: wallet_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./wallet-postgresql-ddl.sql:/docker-entrypoint-initdb.d/init.sql
+
   # Zookeeper e Kafka foram substituídos pelo Redpanda
   redpanda:
     image: redpandadata/redpanda:latest
