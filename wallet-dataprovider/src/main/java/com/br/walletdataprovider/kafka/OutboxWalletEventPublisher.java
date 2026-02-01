@@ -3,10 +3,10 @@ package com.br.walletdataprovider.kafka;
 import com.br.walletcore.port.events.OutboxEventPublisher;
 import com.br.walletdataprovider.mongodb.document.OutboxEventDocument;
 import com.br.walletdataprovider.mongodb.repository.OutboxEventMongoRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import tools.jackson.databind.ObjectMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,9 +24,6 @@ public class OutboxWalletEventPublisher implements OutboxEventPublisher {
 
     @Value("${wallet.audit.enabled}")
     private boolean auditEnabled;
-
-    @Value("${wallet.outbox.max-retries}")
-    private int maxRetries;
 
     @Override
     public void publishOutboxEvent(String eventType, Object payload) {

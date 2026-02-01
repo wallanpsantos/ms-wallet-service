@@ -48,10 +48,6 @@ spring:
 
     # Configurações do Producer
     producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      acks: all # Garante que todas as réplicas confirmem
-      retries: 3
       enable-idempotence: true # Evita duplicatas
       batch-size: ${KAFKA_PRODUCER_BATCH_SIZE:16384}
       linger-ms: ${KAFKA_PRODUCER_LINGER_MS:5}

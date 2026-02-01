@@ -2,7 +2,7 @@ package com.br.walletdataprovider.kafka;
 
 import com.br.walletdataprovider.mongodb.document.OutboxEventDocument;
 import com.br.walletdataprovider.mongodb.repository.OutboxEventMongoRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
