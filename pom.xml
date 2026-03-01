@@ -37,7 +37,7 @@
         <micrometer-registry-otlp.version>1.16.2</micrometer-registry-otlp.version>
         <maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
         <rest-assured.version>6.0.0</rest-assured.version>
-        <tools-jackson.version>3.0.4</tools-jackson.version>
+        <tools-jackson.version>3.1.0</tools-jackson.version>
         <assertj-core.version>3.27.7</assertj-core.version>
     </properties>
 
